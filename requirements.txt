@@ -1,15 +1,14 @@
-﻿# Core Dependencies for Streamlit Cloud
-streamlit==1.30.0
+﻿streamlit==1.30.0
 pydantic==2.5.0
 python-dotenv==1.0.0
 
-# ML & NLP (only essentials for cloud)
 transformers==4.36.0
-torch==2.1.0
+sentence-transformers==2.2.2
 scikit-learn==1.4.0
-sentence-transformers==2.3.0
 
-# Utilities
-requests==2.31.0
+--extra-index-url https://download.pytorch.org/whl/cpu
+torch==2.1.0+cpu
+
 numpy==1.26.0
 pandas==2.1.0
+requests==2.31.0
