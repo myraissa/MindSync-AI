@@ -1,189 +1,17 @@
-# # app/streamlit_app.py
-
-# import streamlit as st
-# from pathlib import Path
-# import sys
-
-# sys.path.append(str(Path(__file__).parent.parent))
-
-# from src.services.conversation_service import EnhancedConversationService
-# from datetime import datetime
-
-# st.set_page_config(
-#     page_title="MindSync AI - Intelligent Mental Health Companion",
-#     page_icon="🧠",
-#     layout="wide"
-# )
-# st.markdown("""
-# <style>
-# /* Page background */
-# [data-testid="stAppViewContainer"] {
-#     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-#     color: white;
-# }
-
-# /* User messages */
-# [data-testid="stChatMessage"][data-role="user"] .stMarkdown p {
-#     color: black;
-#     background-color: rgba(255,255,255,0.9);
-#     border-radius: 15px;
-#     padding: 10px;
-# }
-
-# /* Assistant messages */
-# [data-testid="stChatMessage"][data-role="assistant"] .stMarkdown p {
-#     color: white;
-#     background-color: rgba(0,0,0,0.5);
-#     border-radius: 15px;
-#     padding: 10px;
-# }
-
-# /* Crisis alert */
-# .crisis-alert {
-#     background-color: #ff4444;
-#     color: white;
-#     padding: 20px;
-#     border-radius: 10px;
-#     font-weight: bold;
-#     text-align: center;
-#     margin: 20px 0;
-# }
-
-# /* Sidebar */
-# [data-testid="stSidebar"] {
-#     background-color: rgba(0,0,0,0.5);
-#     color: white;
-# }
-# </style>
-# """, unsafe_allow_html=True)
-
-# # Initialize session state
-# if 'messages' not in st.session_state:
-#     st.session_state.messages = []
-
-# if 'conversation_service' not in st.session_state:
-#     with st.spinner("🤖 Initializing MindSync AI..."):
-#         st.session_state.conversation_service = EnhancedConversationService(user_id="demo_user")
-
-# # Title
-# st.title("🧠 MindSync AI")
-# st.markdown("### Your Intelligent Mental Health Companion")
-# st.markdown("**I'm here to listen, understand, and support you.** 💙")
-
-# # Display chat history
-# for message in st.session_state.messages:
-#     with st.chat_message(message["role"]):
-#         st.markdown(message["content"])
-        
-#         # Show emotion badge for user messages
-#         if message["role"] == "user" and "emotion" in message:
-#             st.caption(f"Detected emotion: **{message['emotion'].upper()}** ({message['confidence']:.0%})")
-
-# # Chat input
-# if prompt := st.chat_input("Type your message here... (I understand mixed languages!)"):
-    
-#     # Add user message
-#     with st.chat_message("user"):
-#         st.markdown(prompt)
-    
-#     st.session_state.messages.append({
-#         "role": "user",
-#         "content": prompt
-#     })
-    
-#     # Process with AI
-#     # app/streamlit_app.py (just the relevant part)
-
-#     # Process with AI
-#     with st.spinner("🤔 Thinking..."):
-#         try:
-#             response_data = st.session_state.conversation_service.process_text_message(
-#                 user_input=prompt,
-#                 conversation_history=st.session_state.messages
-#             )
-#         except KeyError as e:
-#             st.error(f"⚠️ Model error: {e}")
-#             st.info("Using fallback response...")
-            
-#             # Fallback response
-#             response_data = {
-#                 'response': "💭 I'm here to listen. Tell me more about how you're feeling.",
-#                 'detected_emotion': 'neutral',
-#                 'emotion_confidence': 0.5,
-#                 'intent': 'GENERAL',
-#                 'intent_confidence': 0.5,
-#                 'crisis_detected': False,
-#                 'all_emotion_scores': {}
-#             }
-
-    
-#     # Check for crisis
-#     if response_data['crisis_detected']:
-#         st.markdown("""
-#         <div class="crisis-alert">
-#             🚨 CRISIS DETECTED 🚨<br><br>
-#             Please reach out for immediate professional help:<br>
-#             <strong>Tunisia: 80 101 080</strong><br>
-#             <strong>International: 116 123</strong>
-#         </div>
-#         """, unsafe_allow_html=True)
-    
-#     # Add assistant response
-#     with st.chat_message("assistant"):
-#         st.markdown(response_data['response'])
-    
-#     st.session_state.messages.append({
-#         "role": "assistant",
-#         "content": response_data['response']
-#     })
-    
-#     # Update last user message with emotion
-#     st.session_state.messages[-2].update({
-#         "emotion": response_data['detected_emotion'],
-#         "confidence": response_data['emotion_confidence']
-#     })
-    
-#     st.rerun()
-
-# # Sidebar
-# with st.sidebar:
-#     st.title("💡 About MindSync")
-#     st.write("""
-#     MindSync uses advanced AI to:
-#     - 🎭 Understand your emotions
-#     - 💬 Have meaningful conversations
-#     - 🆘 Detect crisis situations
-#     - 📊 Track your mental well-being
-#     """)
-    
-#     if st.button("🗑️ Clear Chat"):
-#         st.session_state.messages = []
-#         st.rerun()
-    
-#     st.markdown("---")
-#     st.caption("⚠️ Not a replacement for professional therapy")
-
-
-
-
-
-
-
+# app/streamlit_app.py
 
 import streamlit as st
 from pathlib import Path
 import sys
 
-# Add src directory to Python path so we can import our modules
-# Add project root (parent of app/) to PYTHONPATH
-ROOT_DIR = Path(__file__).resolve().parent.parent
-if str(ROOT_DIR) not in sys.path:
-    sys.path.insert(0, str(ROOT_DIR))
+sys.path.append(str(Path(__file__).parent.parent))
 
-from src.services.user_service import UserService
-from src.services.memory_system import UserMemorySystem
+from src.services.conversation_service import EnhancedConversationService
+from datetime import datetime
 
-# Configure the page - MUST be first Streamlit command
+# ====================
+# PAGE CONFIGURATION
+# ====================
 st.set_page_config(
     page_title="MindSync AI - Mental Health Companion",
     page_icon="🧠",
@@ -191,323 +19,404 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# ============================================================================
-# INITIALIZATION FUNCTIONS
-# ============================================================================
+# ====================
+# ENHANCED STYLING WITH CUSTOM LOGO
+# ====================
+st.markdown("""
+<style>
+/* ============================================
+   BACKGROUND OPTIONS - Choose one below
+   ============================================ */
 
-def initialize_session_state():
-    """
-    Initialize all session state variables
-    
-    WHY: Session state persists data between page reruns and navigation
-    Without this, data would reset every time user interacts with the app
-    
-    BEGINNER TIP: Always use 'if key not in st.session_state' pattern
-    to avoid resetting values on page refresh
-    """
-    
-    # User authentication state
-    if 'user_id' not in st.session_state:
-        st.session_state.user_id = None
-    
-    if 'user_profile' not in st.session_state:
-        st.session_state.user_profile = None
-    
-    if 'onboarding_complete' not in st.session_state:
-        st.session_state.onboarding_complete = False
-    
-    # Onboarding flow state (tracks which step user is on)
-    if 'onboarding_step' not in st.session_state:
-        st.session_state.onboarding_step = 0
-    
-    # Chat history (list of messages)
-    if 'messages' not in st.session_state:
-        st.session_state.messages = []
-    
-    # Services (initialized once and reused)
-    if 'user_service' not in st.session_state:
-        st.session_state.user_service = UserService()
-    
-    if 'memory_system' not in st.session_state:
-        st.session_state.memory_system = None  # Will be set after login
-    
-    # UI state
-    if 'show_sidebar' not in st.session_state:
-        st.session_state.show_sidebar = True
-    
-    # Crisis mode flag
-    if 'crisis_mode' not in st.session_state:
-        st.session_state.crisis_mode = False
+/* OPTION 1: Calming Teal to Blue (RECOMMENDED for mental health) */
+/*[data-testid="stAppViewContainer"] {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}*/
+
+/* OPTION 2: Peaceful Lavender to Peach */
+/*
+[data-testid="stAppViewContainer"] {
+    background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 50%, #d4a5a5 100%);
+    color: #2d2d2d;
+}
+*/
+
+/* OPTION 3: Healing Green to Blue */
+/*
+[data-testid="stAppViewContainer"] {
+    background: linear-gradient(135deg, #a8e6cf 0%, #dcedc1 50%, #89c9b8 100%);
+    color: #2d2d2d;
+}
+*/
+
+/* OPTION 4: Soft Purple Therapy Vibe */
+/*
+[data-testid="stAppViewContainer"] {
+    background: linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%);
+    color: #2d2d2d;
+}
+*/
+
+/* OPTION 5: Warm Sunset Comfort */
+/*
+[data-testid="stAppViewContainer"] {
+    background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 50%, #fab1a0 100%);
+    color: #2d2d2d;
+}
+*/
+
+/* OPTION 6: Subtle Pattern Overlay (Use with any gradient) */
+
+[data-testid="stAppViewContainer"]::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: radial-gradient(circle at 50% 50%, rgba(200,220,255,0.08) 0%, transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+}
+}
 
 
-def load_custom_css():
-    """
-    Load custom CSS for beautiful, modern UI
+/* Sidebar styling */
+[data-testid="stSidebar"] {
+    background: linear-gradient(180deg, #2d3561 0%, #1a1f3a 100%);
+    border-right: 2px solid rgba(255,255,255,0.1);
+}
+
+[data-testid="stSidebar"] h1, 
+[data-testid="stSidebar"] h2, 
+[data-testid="stSidebar"] h3,
+[data-testid="stSidebar"] p {
+    color: white !important;
+}
+
+/* Custom Logo Container */
+.logo-container {
+    text-align: center;
+    margin-bottom: 30px;
+    padding: 20px;
+}
+
+.logo-container img {
+    max-width: 50px;
+    height: auto;
+    border-radius: 5px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    transition: transform 0.3s ease;
+}
+
+.logo-container img:hover {
+    transform: scale(1.05);
+}
+
+/* Navigation buttons */
+.stButton button {
+    width: 100%;
+    border-radius: 10px;
+    padding: 12px;
+    font-size: 16px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    background-color: rgba(255,255,255,0.1);
+    color: white;
+    border: 1px solid rgba(255,255,255,0.2);
+}
+
+.stButton button:hover {
+    background-color: rgba(255,255,255,0.2);
+    border-color: rgba(255,255,255,0.4);
+    transform: translateX(5px);
+}
+
+/* Chat messages - Glass morphism effect */
+[data-testid="stChatMessage"][data-role="user"] {
+    background: rgba(255,255,255,0.2);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 20px;
+    padding: 20px;
+    margin: 15px 0;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+[data-testid="stChatMessage"][data-role="assistant"] {
+    background: rgba(0,0,0,0.2);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 20px;
+    padding: 20px;
+    margin: 15px 0;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+}
+
+/* Emotion badge */
+.emotion-badge {
+    display: inline-block;
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: bold;
+    margin-top: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+.emotion-joy { background-color: #FFD700; color: #000; }
+.emotion-sadness { background-color: #4169E1; color: #fff; }
+.emotion-anger { background-color: #DC143C; color: #fff; }
+.emotion-fear { background-color: #9370DB; color: #fff; }
+.emotion-neutral { background-color: #808080; color: #fff; }
+
+/* Crisis alert */
+.crisis-alert {
+    background: linear-gradient(135deg, #ff4444 0%, #cc0000 100%);
+    color: white;
+    padding: 25px;
+    border-radius: 20px;
+    font-weight: bold;
+    text-align: center;
+    margin: 20px 0;
+    box-shadow: 0 8px 25px rgba(255,0,0,0.4);
+    animation: pulse 2s infinite;
+    border: 2px solid rgba(255,255,255,0.3);
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); box-shadow: 0 8px 25px rgba(255,0,0,0.4); }
+    50% { transform: scale(1.02); box-shadow: 0 12px 35px rgba(255,0,0,0.6); }
+}
+
+/* Input box - Glass effect */
+[data-testid="stChatInput"] {
+    border-radius: 25px;
+    border: 2px solid rgba(255,255,255,0.3);
+    background: rgba(255,255,255,0.1);
+    backdrop-filter: blur(10px);
+}
+
+/* Title styling with logo */
+.header-container {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.main-title {
+    font-size: 3em;
+    font-weight: bold;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    text-shadow: 2px 2px 8px rgba(0,0,0,0.3);
+    background: linear-gradient(135deg, #ffffff 0%, #e0e0e0 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.subtitle {
+    font-size: 1.5em;
+    margin-bottom: 8px;
+    opacity: 0.95;
+    text-shadow: 1px 1px 4px rgba(0,0,0,0.2);
+}
+
+.tagline {
+    font-size: 1.2em;
+    opacity: 0.85;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+}
+
+/* Floating animation for decorative elements */
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+}
+
+.floating {
+    animation: float 3s ease-in-out infinite;
+}
+</style>
+""", unsafe_allow_html=True)
+
+# ====================
+# SESSION STATE INIT
+# ====================
+# ====================
+# SESSION STATE INIT
+# ====================
+if 'messages' not in st.session_state:
+    st.session_state.messages = []
+
+if 'conversation_service' not in st.session_state:
+    with st.spinner("🤖 Initializing MindSync AI..."):
+        try:
+            st.session_state.conversation_service = EnhancedConversationService(user_id="demo_user")
+            st.success("✅ MindSync AI initialized successfully!", icon="✅")
+        except ImportError as e:
+            st.error(f"❌ **Import Error**: Cannot find the conversation service module.")
+            st.error(f"Details: {str(e)}")
+            st.info("💡 Make sure `src/services/conversation_service.py` exists and contains `EnhancedConversationService`")
+            st.session_state.conversation_service = None
+        except Exception as e:
+            st.error(f"❌ **Failed to initialize AI service**")
+            st.error(f"Error type: `{type(e).__name__}`")
+            st.error(f"Details: {str(e)}")
+            st.exception(e)  # Shows full traceback
+            st.session_state.conversation_service = None
+
+if 'current_page' not in st.session_state:
+    st.session_state.current_page = "Chat"
+
+# ====================
+# SIDEBAR WITH LOGO
+# ====================
+with st.sidebar:
+    # Display custom logo
+    # Replace 'path/to/your/logo.png' with your actual logo path
+    try:
+        st.image("app/assets/logo.png", use_container_width=True)  # Adjust path as needed
+    except:
+        # Fallback if logo not found
+        st.markdown("<div class='logo-container'>🧠 MindSync AI</div>", unsafe_allow_html=True)
     
-    WHY: Default Streamlit styling is basic. Custom CSS makes app professional
+    st.markdown("---")
     
-    CSS EXPLANATION:
-    - Gradients: Modern, calming background
-    - Border radius: Rounded corners for friendly feel
-    - Shadows: Depth and hierarchy
-    - Transitions: Smooth animations
-    """
+    
+    # About section
     st.markdown("""
-    <style>
-    /* ===== GLOBAL STYLES ===== */
+    MindSync uses advanced AI to:
+    - **Understand** your emotions
+    - **Have** meaningful conversations  
+    - **Detect** crisis situations
+    - **Track** your mental well-being
+    """)
     
-    /* Main app background - gradient for calming effect */
-    [data-testid="stAppViewContainer"] {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-    }
+    # Clear chat button
+    st.markdown("---")
+    if st.button("🗑️ Clear Chat History", use_container_width=True):
+        st.session_state.messages = []
+        st.success("Chat cleared!")
+        st.rerun()
     
-    /* Sidebar styling */
-    [data-testid="stSidebar"] {
-        background: rgba(255, 255, 255, 0.1);
-        backdrop-filter: blur(10px);
-    }
+    # Warning
+    st.markdown("---")
+    st.warning("⚠️ **Not a replacement for professional therapy**")
     
-    /* ===== CHAT MESSAGE STYLES ===== */
-    
-    /* User messages - white background, dark text */
-    [data-testid="stChatMessage"][data-testid*="user"] {
-        background-color: rgba(255, 255, 255, 0.95);
-        border-radius: 15px;
-        padding: 15px;
-        margin: 10px 0;
-        color: #333;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    }
-    
-    /* AI messages - translucent dark background */
-    [data-testid="stChatMessage"][data-testid*="assistant"] {
-        background-color: rgba(0, 0, 0, 0.4);
-        border-radius: 15px;
-        padding: 15px;
-        margin: 10px 0;
-        color: white;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-    }
-    
-    /* ===== BUTTON STYLES ===== */
-    
-    /* Primary buttons */
-    .stButton > button {
-        background: linear-gradient(45deg, #667eea, #764ba2);
-        color: white;
-        border: none;
-        border-radius: 10px;
-        padding: 12px 30px;
-        font-weight: 600;
-        transition: all 0.3s ease;
-        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
-    }
-    
-    .stButton > button:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
-    }
-    
-    /* ===== FORM STYLES ===== */
-    
-    /* Input fields */
-    .stTextInput > div > div > input,
-    .stSelectbox > div > div > select,
-    .stTextArea > div > div > textarea {
-        background-color: rgba(255, 255, 255, 0.9);
-        border-radius: 10px;
-        border: 2px solid transparent;
-        transition: all 0.3s ease;
-    }
-    
-    .stTextInput > div > div > input:focus,
-    .stSelectbox > div > div > select:focus,
-    .stTextArea > div > div > textarea:focus {
-        border-color: #667eea;
-        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
-    }
-    
-    /* ===== CARD STYLES ===== */
-    
-    .card {
-        background: rgba(255, 255, 255, 0.1);
-        backdrop-filter: blur(10px);
-        border-radius: 15px;
-        padding: 20px;
-        margin: 15px 0;
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        transition: all 0.3s ease;
-    }
-    
-    .card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-    }
-    
-    /* ===== CRISIS ALERT ===== */
-    
-    .crisis-alert {
-        background-color: #ff4444;
-        color: white;
-        padding: 20px;
-        border-radius: 10px;
-        border-left: 5px solid #cc0000;
-        margin: 20px 0;
-        animation: pulse 2s infinite;
-    }
-    
-    @keyframes pulse {
-        0%, 100% { opacity: 1; }
-        50% { opacity: 0.8; }
-    }
-    
-    /* ===== PROGRESS BAR ===== */
-    
-    .stProgress > div > div > div {
-        background: linear-gradient(90deg, #667eea, #764ba2);
-    }
-    
-    /* ===== METRICS ===== */
-    
-    [data-testid="stMetricValue"] {
-        font-size: 2rem;
-        font-weight: bold;
-        color: #667eea;
-    }
-    
-    /* ===== EXPANDER ===== */
-    
-    .streamlit-expanderHeader {
-        background-color: rgba(255, 255, 255, 0.1);
-        border-radius: 10px;
-        font-weight: 600;
-    }
-    
-    /* ===== SUCCESS/ERROR/WARNING MESSAGES ===== */
-    
-    .stSuccess, .stError, .stWarning, .stInfo {
-        border-radius: 10px;
-        padding: 15px;
-    }
-    
-    </style>
-    """, unsafe_allow_html=True)
+    # Emergency contacts
+    st.markdown("---")
+    st.error("""
+    **🆘 Emergency Contacts:**
+    - Tunisia: **80 101 080**
+    - International: **116 123**
+    """)
 
+# ====================
+# MAIN CONTENT WITH LOGO
+# ====================
+# Display logo in main area (optional - if you want it in both places)
+# try:
+#     col1, col2, col3 = st.columns([1,2,1])
+#     with col2:
+#         st.image("app/assets/logo.png", width=200)  # Adjust path and width
+# except:
+#     pass
 
-# ============================================================================
-# MAIN APPLICATION LOGIC
-# ============================================================================
+st.markdown("<div class='header-container'>", unsafe_allow_html=True)
+st.markdown("<h1 class='main-title floating'>MindSync AI</h1>", unsafe_allow_html=True)
+st.markdown("<p class='subtitle'>Your Intelligent Mental Health Companion</p>", unsafe_allow_html=True)
+st.markdown("<p class='tagline'>I'm here to listen, understand, and support you. 💙</p>", unsafe_allow_html=True)
+st.markdown("</div>", unsafe_allow_html=True)
+st.markdown("---")
 
-def main():
-    """
-    Main application logic
-    
-    FLOW:
-    1. Initialize session state
-    2. Load custom CSS
-    3. Check if user completed onboarding
-    4. Show onboarding OR main app
-    """
-    
-    # Initialize everything
-    initialize_session_state()
-    load_custom_css()
-    
-    # Check onboarding status
-    if not st.session_state.onboarding_complete:
-        # User hasn't completed onboarding - show onboarding flow
-        show_onboarding()
-    else:
-        # User is logged in - show main app with navigation
-        show_main_app()
-
-
-def show_onboarding():
-    """
-    Display onboarding flow
-    
-    WHY: Collect user information for personalization
-    
-    STEPS:
-    0. Welcome screen
-    1. Basic info (name, age, language)
-    2. Mental health concerns
-    3. Support style preferences
-    4. Completion and profile creation
-    """
-    from pages.onboarding import show_onboarding_flow
-    show_onboarding_flow()
-
-
-def show_main_app():
-    """
-    Display main app with navigation
-    
-    WHY: After onboarding, users access different features
-    
-    STRUCTURE:
-    - Sidebar: Navigation menu
-    - Main area: Selected page content
-    """
-    
-    # Sidebar navigation
-    with st.sidebar:
-        st.title("🧠 MindSync AI")
-        st.markdown("---")
+# Display chat history
+for idx, message in enumerate(st.session_state.messages):
+    with st.chat_message(message["role"]):
+        st.markdown(message["content"])
         
-        # User info display
-        if st.session_state.user_profile:
-            st.markdown(f"### Welcome, {st.session_state.user_profile.get('name', 'User')}! 👋")
-            st.markdown("---")
-        
-        # Navigation menu
-        st.markdown("### Navigation")
-        
-        # Page selection
-        page = st.radio(
-            "Go to:",
-            ["💬 Chat", "📊 Insights", "⚙️ Settings"],
-            label_visibility="collapsed"
-        )
-        
-        st.markdown("---")
-        
-        # Quick stats (if available)
-        if st.session_state.memory_system:
-            memory = st.session_state.memory_system.get_user_memory(st.session_state.user_id)
+        # Show emotion badge for user messages
+        if message["role"] == "user" and "emotion" in message:
+            emotion = message['emotion'].lower()
+            st.markdown(
+                f"<span class='emotion-badge emotion-{emotion}'>"
+                f"🎭 {message['emotion'].upper()} ({message['confidence']:.0%})"
+                f"</span>", 
+                unsafe_allow_html=True
+            )
+
+# Chat input
+if prompt := st.chat_input("Type your message here... (I understand mixed languages!) 💬"):
+    
+    # Add user message
+    with st.chat_message("user"):
+        st.markdown(prompt)
+    
+    st.session_state.messages.append({
+        "role": "user",
+        "content": prompt,
+        "timestamp": datetime.now().isoformat()
+    })
+    
+    if "conversation_service" not in st.session_state:
+        st.session_state.conversation_service = EnhancedConversationService()
+
+    
+    # Process with AI
+    with st.spinner("🤔 Thinking..."):
+        try:
+            response_data = st.session_state.conversation_service.process_text_message(
+                user_input=prompt,
+                conversation_history=st.session_state.messages
+            )
+        except Exception as e:
+            st.error(f"⚠️ Error processing message: {str(e)}")
+            st.error(f"Error type: {type(e).__name__}")
+            st.exception(e)
             
-            st.markdown("### Quick Stats")
-            col1, col2 = st.columns(2)
-            with col1:
-                st.metric("Conversations", memory.get('total_conversations', 0))
-            with col2:
-                st.metric("Days Active", memory.get('days_active', 0))
-        
-        st.markdown("---")
-        
-        # Logout button
-        if st.button("🚪 Logout", use_container_width=True):
-            # Clear session state
-            for key in list(st.session_state.keys()):
-                del st.session_state[key]
-            st.rerun()
+            # Fallback response
+            response_data = {
+                'response': "💭 I'm experiencing technical difficulties. Tell me more about how you're feeling.",
+                'detected_emotion': 'neutral',
+                'emotion_confidence': 0.5,
+                'intent': 'GENERAL',
+                'intent_confidence': 0.5,
+                'crisis_detected': False,
+                'all_emotion_scores': {}
+            }
+
+    # Check for crisis
+    if response_data['crisis_detected']:
+        st.markdown("""
+        <div class="crisis-alert">
+            🚨 CRISIS DETECTED 🚨<br><br>
+            <strong>You're not alone. Please reach out for immediate help:</strong><br><br>
+            📞 <strong>Tunisia: 80 101 080</strong><br>
+            🌍 <strong>International: 116 123</strong><br><br>
+            <em>These services are confidential and available 24/7</em>
+        </div>
+        """, unsafe_allow_html=True)
     
-    # Display selected page
-    if page == "💬 Chat":
-        from pages.Chat import show_chat_page
-        show_chat_page()
-    elif page == "📊 Insights":
-        from pages.Insights import show_insights_page
-        show_insights_page()
-    elif page == "⚙️ Settings":
-        from pages.Settings import show_settings_page
-        show_settings_page()
+    # Add assistant response
+    with st.chat_message("assistant"):
+        st.markdown(response_data['response'])
+    
+    st.session_state.messages.append({
+        "role": "assistant",
+        "content": response_data['response'],
+        "timestamp": datetime.now().isoformat()
+    })
+    
+    # Update last user message with emotion
+    st.session_state.messages[-2].update({
+        "emotion": response_data['detected_emotion'],
+        "confidence": response_data['emotion_confidence'],
+        "intent": response_data['intent']
+    })
+    
+    st.rerun()
 
-
-# ============================================================================
-# RUN APPLICATION
-# ============================================================================
-
-if __name__ == "__main__":
-    main()
+# Show message count
+if st.session_state.messages:
+    st.caption(f"💬 **{len(st.session_state.messages)} messages** in this conversation")
