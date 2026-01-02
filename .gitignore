@@ -1,13 +1,36 @@
-venv
-__pycache__
-*.pyc
-.DS_Store
+﻿# Python
+__pycache__/
+*.py[cod]
+*.class
+*.so
+.Python
+venv/
+env/
+ENV/
+
+# Streamlit
+.streamlit/secrets.toml
+
+# Data & Models
+data/
+models/
+*.pkl
+*.pth
+*.h5
+
+# Logs
+logs/
+*.log
+
+# Environment
 .env
 .env.local
-.env.*.local
-.env.example
-*.bin
-*.model
-*.models
-/data/
-/models/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
