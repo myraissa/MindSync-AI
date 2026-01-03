@@ -10,7 +10,7 @@ ENV/
 
 # Streamlit
 .streamlit/secrets.toml
-
+/app/no needed
 # Data & Models
 data/
 /models/
