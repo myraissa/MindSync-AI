@@ -15,7 +15,7 @@ except ImportError:
     PLOTLY_AVAILABLE = False
     st.warning("⚠️ Plotly not available. Install with: pip install plotly")
 
-
+sys.path.append(str(Path(__file__).parent.parent.parent))
 # ============================================================================
 # MOTIVATIONAL CONTENT
 # ============================================================================
@@ -939,7 +939,6 @@ if __name__ == "__main__":
     # Set page config
     st.set_page_config(
         page_title="Insights - MindSync AI",
-        page_icon="📊",
         layout="wide"
     )
     

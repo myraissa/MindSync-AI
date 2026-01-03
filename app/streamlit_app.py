@@ -14,7 +14,6 @@ from datetime import datetime
 # ====================
 st.set_page_config(
     page_title="MindSync AI - Mental Health Companion",
-    page_icon="🧠",
     layout="wide",
     initial_sidebar_state="expanded"
 )
@@ -209,11 +208,11 @@ st.markdown("""
     font-weight: bold;
     margin-top: 10px;
     margin-bottom: 10px;
-    text-shadow: 2px 2px 8px rgba(0,0,0,0.3);
-    background: linear-gradient(135deg, #ffffff 0%, #e0e0e0 100%);
+    background: linear-gradient(135deg, #00d4ff 0%, #ffffff 50%, #00d4ff 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+    /* Remove text-shadow when using gradient text */
 }
 
 .subtitle {
@@ -254,7 +253,6 @@ if 'conversation_service' not in st.session_state:
     with st.spinner("🤖 Initializing MindSync AI..."):
         try:
             st.session_state.conversation_service = EnhancedConversationService(user_id="demo_user")
-            st.success("✅ MindSync AI initialized successfully!", icon="✅")
         except ImportError as e:
             st.error(f"❌ **Import Error**: Cannot find the conversation service module.")
             st.error(f"Details: {str(e)}")
@@ -273,16 +271,17 @@ if 'current_page' not in st.session_state:
 # ====================
 # SIDEBAR WITH LOGO
 # ====================
+import os
 with st.sidebar:
     # Display custom logo
-    # Replace 'path/to/your/logo.png' with your actual logo path
     try:
-        st.image("app/assets/logo.png", use_container_width=True)  # Adjust path as needed
-    except:
-        # Fallback if logo not found
+        # Get the absolute path to the logo
+        logo_path = os.path.join(os.path.dirname(__file__), "assets", "logo.png")
+        st.image(logo_path, use_container_width=True)
+    except Exception as e:
+        # Fallback if logo not found - show error for debugging
+        st.error(f"Logo not found: {e}")
         st.markdown("<div class='logo-container'>🧠 MindSync AI</div>", unsafe_allow_html=True)
-    
-    st.markdown("---")
     
     
     # About section

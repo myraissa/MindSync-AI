@@ -6,3 +6,4 @@ torch>=2.1.0
 transformers>=4.35.0
 sentence-transformers>=2.2.0
 faiss-cpu>=1.7.4
+plotly>=5.18.0
