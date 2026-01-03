@@ -277,7 +277,7 @@ with st.sidebar:
     try:
         # Get the absolute path to the logo
         logo_path = os.path.join(os.path.dirname(__file__), "assets", "logo.png")
-        st.image(logo_path, width="stretch")
+        st.image(logo_path)
     except Exception as e:
         # Fallback if logo not found - show error for debugging
         st.error(f"Logo not found: {e}")
@@ -295,7 +295,7 @@ with st.sidebar:
     
     # Clear chat button
     st.markdown("---")
-    if st.button("🗑️ Clear Chat History", use_container_width=True):
+    if st.button("🗑️ Clear Chat History"):
         st.session_state.messages = []
         st.success("Chat cleared!")
         st.rerun()
