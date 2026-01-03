@@ -202,7 +202,6 @@ st.markdown("""
     text-align: center;
     margin-bottom: 30px;
 }
-
 .main-title {
     font-size: 3em;
     font-weight: bold;
@@ -212,7 +211,7 @@ st.markdown("""
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    /* Remove text-shadow when using gradient text */
+    display: inline-block; /* This is important! */
 }
 
 .subtitle {
