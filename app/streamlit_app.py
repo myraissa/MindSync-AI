@@ -202,13 +202,14 @@ st.markdown("""
     text-align: center;
     margin-bottom: 30px;
 }
-.main-title {
-    color: #00d4ff; /* fallback */
-    background: linear-gradient(135deg, #00d4ff 0%, #ffffff 50%, #00d4ff 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+[data-testid="stMarkdownContainer"] .main-title {
+    font-size: 3em;
+    font-weight: 800;
+    margin: 10px 0;
+    color: #4a5abf; /* unique solid blue that complements sidebar */
+    display: inline-block;
 }
+
 
 
 .subtitle {
