@@ -98,11 +98,11 @@ st.markdown("""
 .logo-container {
     text-align: center;
     margin-bottom: 30px;
-    padding: 20px;
+    padding: 50px;
 }
 
 .logo-container img {
-    max-width: 50px;
+    max-width: 100px;
     height: auto;
     border-radius: 5px;
     box-shadow: 0 8px 20px rgba(0,0,0,0.2);
@@ -277,7 +277,7 @@ with st.sidebar:
     try:
         # Get the absolute path to the logo
         logo_path = os.path.join(os.path.dirname(__file__), "assets", "logo.png")
-        st.image(logo_path, use_container_width=True)
+        st.image(logo_path, width="stretch")
     except Exception as e:
         # Fallback if logo not found - show error for debugging
         st.error(f"Logo not found: {e}")
