@@ -6,6 +6,7 @@
 
 > **Not just another chatbot** - An AI companion that gives honest advice, remembers your journey, and actually helps.
 
+Check out [demo](https://mindsync-ai-akywxsuhxjkwb6onu4c6ts.streamlit.app/) for more info.
 ---
 
 ## 🌟 What Makes MindSync Different?
