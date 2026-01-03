@@ -13,7 +13,7 @@ ENV/
 
 # Data & Models
 data/
-models/
+/models/
 *.pkl
 *.pth
 *.h5
